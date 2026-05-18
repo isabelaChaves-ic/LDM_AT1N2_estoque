@@ -1,9 +1,3 @@
--- ============================================================
--- Schema do Supabase — Estocadão
--- Executar no SQL Editor do painel do Supabase
--- ============================================================
-
--- Tabela de produtos
 CREATE TABLE IF NOT EXISTS products (
     id          uuid        PRIMARY KEY DEFAULT gen_random_uuid(),
     name        varchar     NOT NULL,
@@ -14,7 +8,6 @@ CREATE TABLE IF NOT EXISTS products (
     updated_at  timestamp   NOT NULL DEFAULT now()
 );
 
--- Tabela de itens de estoque
 CREATE TABLE IF NOT EXISTS stock_items (
     id          uuid            PRIMARY KEY DEFAULT gen_random_uuid(),
     product_id  uuid            NOT NULL REFERENCES products(id) ON DELETE CASCADE,
@@ -24,11 +17,8 @@ CREATE TABLE IF NOT EXISTS stock_items (
     updated_at  timestamp       NOT NULL DEFAULT now()
 );
 
--- Índice para buscas por produto
 CREATE INDEX IF NOT EXISTS idx_stock_items_product_id ON stock_items(product_id);
 
--- View para o endpoint GET /stock/summary
--- Agrega quantidade total por produto via GROUP BY + SUM (conforme requisito)
 CREATE OR REPLACE VIEW stock_summary AS
     SELECT
         p.id   AS product_id,
